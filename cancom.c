@@ -136,7 +136,7 @@ void TransmitSync(void)
 void ReceiveData( Node_t * node )
 {
 		CANMessageGet(CAN0_BASE, 1, &rxCANMessage, 0);
-		node->node_nr = (rxCANMessage.ui32MsgID & 0xff); 					// extact the first 8 bits which correspond to the node id
+		node->node_nr = (rxCANMessage.ui32MsgID & 0xff); 					// extract the first 8 bits which correspond to the node id
 		node->node_type = ((rxCANMessage.ui32MsgID) & (0x700))>>8; // extract the node type from the msg id
 		node->node_data_size = rxCANMessage.ui32MsgLen;
 		node->node_data_ptr = rxCANMessage.pui8MsgData;

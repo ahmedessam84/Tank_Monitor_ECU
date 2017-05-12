@@ -48,6 +48,7 @@
 #include "rtc.h"
 #include "btnmr.h"
 #include "LCD20x04.h"
+#include "display.h"
 
 #define TRUE 		1
 #define FALSE 	0
@@ -66,6 +67,12 @@ typedef struct
 	cursor_t cursor;
 }SetupScreen_t;
 
+typedef enum
+{
+	NORMAL,
+	SETUP
+}AppMode_t;
+	
 
 //*****************************************************************************
 //
@@ -73,7 +80,30 @@ typedef struct
 // occurred, which should match the number of TX messages that were sent.
 //
 //*****************************************************************************
+
 volatile uint32_t g_ui32MsgCount = 0;
+
+AppMode_t AppMode;
+
+static char t1[6];
+static char t2[6];
+static char t3[6];
+static char t4[6];
+static char t5[6];
+static char t6[6];
+
+SetupScreen_t DispSetupParams1;
+
+static bool first_time_flag = TRUE;
+char cHr[2];
+char cMin[2];
+char cSec[2];
+char cDay[2];
+char cMonth[2];
+char cYear[2];
+char cRadius_buffer[6];
+char cLength_buffer[6];
+
 
 //*****************************************************************************
 //
@@ -358,13 +388,13 @@ static void Rx_Task(void *pvParameters)
 	
 	while(1)
 	{
+		
 		/* As before, block to wait for a notification from the ISR. This
 		time however the first parameter is set to pdTRUE, clearing the task's
 		notification value to 0, meaning each outstanding deferred
 		interrupt event must be processed before ulTaskNotifyTake() is called
 		again. */
 	
-		
 		ulTaskNotifyTake( pdTRUE, xBlockTime );
 		// Wait for receiving the response from sensor
 
@@ -373,11 +403,8 @@ static void Rx_Task(void *pvParameters)
 			
 				taskENTER_CRITICAL();
 				ReceiveData( &node );
-				taskEXIT_CRITICAL();
-			
 				g_bRXFlag = 0;
-			
-				//ulNotifiedValue = 0;
+				taskEXIT_CRITICAL();
 			
 				// Then send the msg received to the queue corresponding to the correct sensor
 				// Do not block if queue is full
@@ -391,7 +418,6 @@ static void Rx_Task(void *pvParameters)
 					case 6: xQueueSend( xQueueData6, &node, ( TickType_t ) 0); break;
 				}
 			
-		
 		}
 		else if(g_bErrFlag == 1)
 		{
@@ -406,7 +432,7 @@ static void Rx_Task(void *pvParameters)
 //*****************************************************************************
 //
 //	Polls buttons every 1ms to get their debounced status
-//	Fills a queue with the state of the buttons
+//	Fill a queue with the state of the buttons
 //
 //*****************************************************************************
 
@@ -429,9 +455,10 @@ static void ButtonsPoll_Task(void *pvparameters)
 	{
 		
 		// If buttons are locked keep updating the calendar setup parameters
+		// buttons locked mean that the application is in NORMAL mode
 		if( setup1.Unlocked == FALSE )
-		{
-			// check if button is unlocked
+		{	
+			// check for unlock
 			BtnMr( NULL, NULL, &setup1.Unlocked );
 		
 			xSemaphoreTake( g_pRTCSemaphore, portMAX_DELAY );
@@ -442,7 +469,10 @@ static void ButtonsPoll_Task(void *pvparameters)
 
 		// If buttons are unlocked then the setup parameters can be modified
 		else
-		{	
+		{
+			// change application mode to SETUP
+			AppMode = SETUP;
+			
 			setup1.calendar.tm_sec = 0;
 
 			switch(setup1.cursor)
@@ -483,42 +513,60 @@ static void ButtonsPoll_Task(void *pvparameters)
 	}
 	
 }
-
-
 //*****************************************************************************
 //
-// Setup Screen Display Task
+// 														Display Task v1.0
 //
 //*****************************************************************************
 
-static void SetupScreen_Task( void *pvparameters )
+static void Display_Task( void *pvparameter )
 {
 	
-	SetupScreen_t DispSetupParams1;
-
-	static bool first_time_flag = TRUE;
-	char cHr[2];
-	char cMin[2];
-	char cSec[2];
-	char cDay[2];
-	char cMonth[2];
-	char cYear[2];
-
-	char cRadius_buffer[6];
-	char cLength_buffer[6];
+	// Check application mode if NORMAL or SETUP
 	
-	while(1)
+	// if NORMAL
+	// display normal screen
+	if( AppMode == NORMAL)
 	{
-		//
-		// Block for 1 second until a button is pressed and the setup display parameters are updated
-		// During this 1 second block, other tasks can run
-		//
+
+		// Display Normal Screen Template
+		LcdNormalScreenBase();
+		
+		// fill data into the screen
+		
+		// Display calendar
+		DisplayCal();
+			
+		// Display sensor 1
+		LcdT1( t1 );
+		
+		// Display sensor 2
+		LcdT2( t2 );
+
+		// Display sensor 3
+		LcdT3( t3 );
+
+		// Display sensor 4
+		LcdT4( t4 );
+
+		// Display sensor 5
+		LcdT5( t5 );
+
+		// Display sensor 6
+		LcdT6( t6 );
+
+	}
+	
+	// if SETUP
+	// display setup screen and parameters
+	else
+	{
+		// display 
 		xQueueReceive( xQueuebtns, &DispSetupParams1, (TickType_t) 1000 );
 
 		// if the setup screen is unlocked then display the setup parameters and setup screen
 		if(DispSetupParams1.Unlocked == TRUE )
 		{
-			
 			// convert the edited values into ascii
 			strftime( cHr, 3, "%H", &DispSetupParams1.calendar );
 			strftime( cMin, 3, "%M", &DispSetupParams1.calendar );
@@ -539,6 +587,153 @@ static void SetupScreen_Task( void *pvparameters )
 				vTaskSuspend( Rx_Task_Handle );
 				vTaskSuspend( Tx_Task_Handle );
 				vTaskSuspend( DispCal_Task_Handle );
+				vTaskSuspend( DisplayT1_Task_Handle );
+				vTaskSuspend( DisplayT2_Task_Handle );
+				vTaskSuspend( DisplayT3_Task_Handle );
+				vTaskSuspend( DisplayT4_Task_Handle );
+				vTaskSuspend( DisplayT5_Task_Handle );
+				vTaskSuspend( DisplayT6_Task_Handle );
+				
+				LCD_Clear();
+				LcdSetupScreenBase();
+				LcdHr(cHr);
+				LcdMin(cMin);
+				LcdSec(cSec);
+				LcdDay(cDay);
+				LcdMonth(cMonth);
+				LcdYr(cYear);
+			
+				LcdRadius(cRadius_buffer);
+				LcdLength(cLength_buffer);
+				LCD_DispCursor();
+				first_time_flag = FALSE;
+				
+			}
+			
+			// if this is not the first time to run this code then update only the value that we are changing using buttons
+			else
+			{
+				
+				switch(DispSetupParams1.cursor)
+				{
+					case HOUR: LcdHr(cHr); break;
+					case MIN: LcdMin(cMin); break;
+					case DAY: LcdDay(cDay); break;
+					case MONTH: LcdMonth(cMonth); break;
+					case YEAR: LcdYr(cYear); break;
+					case RADIUS: LcdRadius(cRadius_buffer); break;
+					case LENGTH: LcdLength(cLength_buffer); break;
+				}
+				
+			}
+
+		}
+		
+		//
+		// Else if setup mode was terminated by locking back the screen, the condition below must be true
+		//
+		else if( (DispSetupParams1.Unlocked == FALSE) && ( first_time_flag == FALSE) ) 
+		{
+			//**************EXIT SETUP MODE PROCEDURES************//
+			
+			//
+			// Apply changes we made in the setup mode to RTC Hardware
+			//
+			Rtc_SetDate( &DispSetupParams1.calendar );
+			
+			//
+			// ON EXIT from the setup mode reset the flag back to TRUE
+			//
+			first_time_flag = TRUE;
+		
+			//
+			// Hide Cursor
+			//
+			LCD_HideCursor();
+
+			//
+			// Clear LCD
+			//
+			LCD_Clear();
+			
+			//
+		  // Resume normal operation and run all tasks back
+			//
+			vTaskResume( Rx_Task_Handle );
+			vTaskResume( Tx_Task_Handle );
+			vTaskResume( DispCal_Task_Handle );
+			vTaskResume( DispCal_Task_Handle );
+			vTaskResume( DisplayT1_Task_Handle );
+			vTaskResume( DisplayT2_Task_Handle );
+			vTaskResume( DisplayT3_Task_Handle );
+			vTaskResume( DisplayT4_Task_Handle );
+			vTaskResume( DisplayT5_Task_Handle );
+			vTaskResume( DisplayT6_Task_Handle );
+			
+		}
+		else{};
+		
+		
+		
+	}
+	
+	vTaskDelay( 100 );
+	
+}
+
+
+
+//*****************************************************************************
+//
+// Setup Screen Display Task
+//
+//*****************************************************************************
+
+static void SetupScreen_Task( void *pvparameters )
+{
+	
+	SetupScreen_t DispSetupParams1;
+
+	static bool first_time_flag = TRUE;
+	char cHr[2];
+	char cMin[2];
+	char cSec[2];
+	char cDay[2];
+	char cMonth[2];
+	char cYear[2];
+	char cRadius_buffer[6];
+	char cLength_buffer[6];
+	
+	while(1)
+	{
+		//
+		// Block for 1 second until a button is pressed and the setup display parameters are updated
+		// During this 1 second block, other tasks can run
+		//
+		xQueueReceive( xQueuebtns, &DispSetupParams1, (TickType_t) 1000 );
+
+		// if the setup screen is unlocked then display the setup parameters and setup screen
+		if(DispSetupParams1.Unlocked == TRUE )
+		{
+			// convert the edited values into ascii
+			strftime( cHr, 3, "%H", &DispSetupParams1.calendar );
+			strftime( cMin, 3, "%M", &DispSetupParams1.calendar );
+			strftime( cSec, 3, "%S", &DispSetupParams1.calendar );
+			strftime( cDay, 3, "%d", &DispSetupParams1.calendar );
+			strftime( cMonth, 3, "%m", &DispSetupParams1.calendar );
+			strftime( cYear, 3, "%y", &DispSetupParams1.calendar );
+				
+			// Convert radius and length into ascii
+			itoa_new( DispSetupParams1.Tank.length, cLength_buffer );
+			itoa_new( DispSetupParams1.Tank.radius, cRadius_buffer );
+					
+			// If this is the first time to run this code display all the values on the screen for the first time
+			if( first_time_flag == TRUE )
+			{
+				// In setup mode suspend all tasks below except for buttons poll and setup display tasks
+				
+				vTaskSuspend( Rx_Task_Handle );
+				vTaskSuspend( Tx_Task_Handle );
 				vTaskSuspend( DispCal_Task_Handle );
 				vTaskSuspend( DisplayT1_Task_Handle );
 				vTaskSuspend( DisplayT2_Task_Handle );
@@ -718,11 +913,6 @@ static void DisplayT1_Task( void *pvparameters )
 			strncpy(t1, "NA   ", 6);
 		}
 			
-		// protect the data displayed
-		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );
-		LcdT1( t1 );
-		xSemaphoreGive( g_pLCDSemaphore );
-		
 	}
 	
 }
@@ -757,11 +947,6 @@ static void DisplayT2_Task( void *pvparameters )
 			strncpy(t2, "NA   ", 6);
 		}
 			
-		// protect the data displayed
-		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );
-		LcdT2( t2 );
-		xSemaphoreGive( g_pLCDSemaphore );
-		
 	}
 		
 }
@@ -797,11 +982,6 @@ static void DisplayT3_Task( void *pvparameters )
 			strncpy(t3, "NA   ", 6);
 		}
 			
-		// protect the data displayed
-		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );		
-		LcdT3( t3 );
-		xSemaphoreGive( g_pLCDSemaphore );
-		
 	}
 	
 }
@@ -837,11 +1017,6 @@ static void DisplayT4_Task( void *pvparameters )
 			strncpy(t4, "NA   ", 6);
 		}
 			
-		// protect the data displayed
-		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );
-		LcdT4( t4 );
-		xSemaphoreGive( g_pLCDSemaphore );
-		
 	}
 	
 }
@@ -878,11 +1053,6 @@ static void DisplayT5_Task( void *pvparameters )
 			strncpy(t5, "NA   ", 6);
 		}
 			
-		// protect the data displayed
-		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );		
-		LcdT5( t5 );
-		xSemaphoreGive( g_pLCDSemaphore );
-		
 	}
 	
 }
@@ -917,11 +1087,6 @@ static void DisplayT6_Task( void *pvparameters )
 			strncpy(t6, "NA   ", 6);
 		}
 			
-		// protect the data displayed
-		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );		
-		LcdT6( t6 );		
-		xSemaphoreGive( g_pLCDSemaphore );
-		
 	}
 	
 }
@@ -934,6 +1099,8 @@ static void DisplayT6_Task( void *pvparameters )
 int
 main(void)
 {
+	// declare and initialize AppMode to NORMAL on startup
+		AppMode = NORMAL;
     //
     // Set the clocking to run at 80 MHz from the PLL.
     //
@@ -980,7 +1147,8 @@ main(void)
 		// this will be as if the interrupt did the processing of the task
 		xTaskCreate( Rx_Task, "Rx_Task", 100, NULL, 12, &Rx_Task_Handle );
 		
-		xTaskCreate( DispCal_Task, "DispCal_Task", 100, NULL, 7, &DispCal_Task_Handle );
+		//xTaskCreate( DispCal_Task, "DispCal_Task", 100, NULL, 7, &DispCal_Task_Handle );
+		xTaskCreate( Display_Task, "DispCal_Task", 100, NULL, 7, &DispCal_Task_Handle );
 		xTaskCreate( DisplayT1_Task, "DisplayT1_Task", 100, NULL, 6, &DisplayT1_Task_Handle );
 		xTaskCreate( DisplayT2_Task, "DisplayT2_Task", 100, NULL, 5, &DisplayT2_Task_Handle );
 		xTaskCreate( DisplayT3_Task, "DisplayT3_Task", 100, NULL, 4, &DisplayT3_Task_Handle );
@@ -988,7 +1156,7 @@ main(void)
 		xTaskCreate( DisplayT5_Task, "DisplayT5_Task", 100, NULL, 2, &DisplayT5_Task_Handle );
 		xTaskCreate( DisplayT6_Task, "DisplayT6_Task", 100, NULL, 1, &DisplayT6_Task_Handle );
 		
-		xTaskCreate( SetupScreen_Task, "SetupScreen_Task", 100, NULL, 9, &SetupScreen_Task_Handle );
+		//xTaskCreate( SetupScreen_Task, "SetupScreen_Task", 100, NULL, 9, &SetupScreen_Task_Handle );
 
 		xTaskCreate( ButtonsPoll_Task, "ButtonsPoll_Task", 100, NULL, 10, &ButtonsPoll_Task_Handle );
 		
