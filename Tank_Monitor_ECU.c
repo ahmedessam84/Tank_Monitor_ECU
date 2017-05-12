@@ -539,7 +539,6 @@ static void SetupScreen_Task( void *pvparameters )
 				vTaskSuspend( Rx_Task_Handle );
 				vTaskSuspend( Tx_Task_Handle );
 				vTaskSuspend( DispCal_Task_Handle );
-				vTaskSuspend( DispCal_Task_Handle );
 				vTaskSuspend( DisplayT1_Task_Handle );
 				vTaskSuspend( DisplayT2_Task_Handle );
 				vTaskSuspend( DisplayT3_Task_Handle );
@@ -614,7 +613,6 @@ static void SetupScreen_Task( void *pvparameters )
 			//
 			vTaskResume( Rx_Task_Handle );
 			vTaskResume( Tx_Task_Handle );
-			vTaskResume( DispCal_Task_Handle );
 			vTaskResume( DispCal_Task_Handle );
 			vTaskResume( DisplayT1_Task_Handle );
 			vTaskResume( DisplayT2_Task_Handle );
