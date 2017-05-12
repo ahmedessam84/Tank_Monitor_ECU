@@ -1,0 +1,14 @@
+.\objects\cancom.o: cancom.c
+.\objects\cancom.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\cancom.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_memmap.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_types.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_can.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/gpio.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/pin_map.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/rom.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/sysctl.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/can.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_ints.h
+.\objects\cancom.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/interrupt.h
+.\objects\cancom.o: cancom.h

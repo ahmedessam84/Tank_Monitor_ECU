@@ -1,0 +1,12 @@
+.\objects\btn.o: btn.c
+.\objects\btn.o: btn.h
+.\objects\btn.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\btn.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_types.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_memmap.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_gpio.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/sysctl.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/rom.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/rom_map.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/pin_map.h
+.\objects\btn.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/gpio.h

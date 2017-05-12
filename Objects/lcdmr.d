@@ -1,0 +1,17 @@
+.\objects\lcdmr.o: lcdmr.c
+.\objects\lcdmr.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\lcdmr.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_memmap.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_types.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/debug.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/fpu.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/gpio.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/pin_map.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/rom.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/sysctl.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/uart.h
+.\objects\lcdmr.o: D:\ti\TivaWare_C_Series-2.1.3.156\utils/uartstdio.h
+.\objects\lcdmr.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\lcdmr.o: LCD20x04.h
+.\objects\lcdmr.o: lcdmr.h
+.\objects\lcdmr.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

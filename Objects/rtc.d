@@ -1,0 +1,13 @@
+.\objects\rtc.o: rtc.c
+.\objects\rtc.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\rtc.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\rtc.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/debug.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/gpio.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/pin_map.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/rom.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/sysctl.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_hibernate.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/hibernate.h
+.\objects\rtc.o: D:\ti\TivaWare_C_Series-2.1.3.156\utils/ustdlib.h
+.\objects\rtc.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
