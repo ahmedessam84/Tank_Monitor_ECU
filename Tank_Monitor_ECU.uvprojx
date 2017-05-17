@@ -465,15 +465,20 @@
               <FilePath>D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\can.c</FilePath>
             </File>
             <File>
-              <FileName>Display.c</FileName>
+              <FileName>buttonspoll_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Display.c</FilePath>
+              <FilePath>.\buttonspoll_task.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Inc</GroupName>
           <Files>
+            <File>
+              <FileName>buttonspoll_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\buttonspoll_task.h</FilePath>
+            </File>
             <File>
               <FileName>switch_task.h</FileName>
               <FileType>5</FileType>
@@ -530,9 +535,9 @@
               <FilePath>.\btn.h</FilePath>
             </File>
             <File>
-              <FileName>display.h</FileName>
+              <FileName>apptypes.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\display.h</FilePath>
+              <FilePath>.\apptypes.h</FilePath>
             </File>
           </Files>
         </Group>

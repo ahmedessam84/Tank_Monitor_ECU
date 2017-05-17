@@ -10,6 +10,12 @@
 #include "inc/hw_hibernate.h"
 #include "driverlib/hibernate.h"
 #include "utils/ustdlib.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+
+extern xSemaphoreHandle g_pRTCSemaphore;
 
 time_t rtcSeconds;	 /* date/time in unix SECONDS past 1-Jan-70 */
 
@@ -28,14 +34,18 @@ void Rtc_Init(void)
 /* use this function to get the current time and date*/
 void Rtc_GetDate( struct tm *tm_ptr )
 {
+	xSemaphoreTake( g_pRTCSemaphore, portMAX_DELAY );
 	ulocaltime( HibernateRTCGet(), tm_ptr );
+	xSemaphoreGive( g_pRTCSemaphore );
 }
 
 /* converts a date/time format to seconds to be loaded into the hibernation counter register */
 /* use this function to set the current time and date*/
 void Rtc_SetDate( struct tm *tm_ptr )
 {	
+	xSemaphoreTake( g_pRTCSemaphore, portMAX_DELAY );
 	HibernateRTCSet( umktime( tm_ptr ) );
+	xSemaphoreGive( g_pRTCSemaphore );
 }
 
 /* use this code to convert time to ascii for display on terminal or LCD

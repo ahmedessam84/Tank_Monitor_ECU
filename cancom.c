@@ -13,6 +13,10 @@
 #include "driverlib/interrupt.h"
 #include "driverlib/pin_map.h"
 #include "cancom.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
 //***************************MyCANProtocol**********************************
 // CAN protocol - Master transmits a SYNC msg all slave nodes receive the msg
@@ -20,6 +24,11 @@
 //
 // Each node's ID consists of 11 bits the first Most significant three bits
 // Indicate the type of sensor. The remaining 8 bits indicate the node number
+
+//                         |----| |-------------|
+// CAN ID 11-bits numbers: 10 9 8 7 6 5 4 3 2 1 0
+//                         |type| |----number---|
+
 //**************************************************************************
 // NOTE: the node with the lowest identifier transmits more zeros at the start of the frame, 
 // and that is the node that wins the arbitration or has the highest priority.
@@ -44,7 +53,7 @@
 	
 // Intializes the CAN module for Master node operation which requires:
 // Master receives any msg on network
-// Master sends a sync msg every 20 ms
+// Master sends a sync msg every 2s
 //  
 void CANCom_Master_Init(void)
 {
@@ -135,10 +144,12 @@ void TransmitSync(void)
 // msg and store it in the passed parameters to be used by the application
 void ReceiveData( Node_t * node )
 {
+		taskENTER_CRITICAL();
 		CANMessageGet(CAN0_BASE, 1, &rxCANMessage, 0);
 		node->node_nr = (rxCANMessage.ui32MsgID & 0xff); 					// extact the first 8 bits which correspond to the node id
 		node->node_type = ((rxCANMessage.ui32MsgID) & (0x700))>>8; // extract the node type from the msg id
 		node->node_data_size = rxCANMessage.ui32MsgLen;
 		node->node_data_ptr = rxCANMessage.pui8MsgData;
+		taskEXIT_CRITICAL();
 }
 //********************************************************************************

@@ -36,10 +36,12 @@
 #include "driverlib/uart.h"
 #include "driverlib/can.h"
 #include "utils/uartstdio.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+
 #include "inc/hw_ints.h"
 #include "driverlib/interrupt.h"
 #include "driverlib/pin_map.h"
@@ -48,23 +50,8 @@
 #include "rtc.h"
 #include "btnmr.h"
 #include "LCD20x04.h"
-
-#define TRUE 		1
-#define FALSE 	0
-
-typedef struct
-{
-	int radius;
-	int length;
-}TankDim_t;
-
-typedef struct
-{
-	TankDim_t Tank;
-	struct tm calendar;
-	bool Unlocked;
-	cursor_t cursor;
-}SetupScreen_t;
+#include "apptypes.h"
+#include "buttonspoll_task.h"
 
 
 //*****************************************************************************
@@ -73,6 +60,7 @@ typedef struct
 // occurred, which should match the number of TX messages that were sent.
 //
 //*****************************************************************************
+
 volatile uint32_t g_ui32MsgCount = 0;
 
 //*****************************************************************************
@@ -80,26 +68,30 @@ volatile uint32_t g_ui32MsgCount = 0;
 // A flag to indicate that some transmission error occurred.
 //
 //*****************************************************************************
+
 volatile bool g_bErrFlag = 0;
 volatile bool g_bRXFlag = 0;
+
 /*****************************************************************************/
 
 void vApplicationTickHook( void );	
 volatile uint32_t ui32TickCounter;	
 
-void RollOverAdjust( SetupScreen_t *);
 
 /*****************************************************************************/
 //
 // Queue to hold the data received from the CAN Network
 // 
+
 QueueHandle_t xQueueData1;
 QueueHandle_t xQueueData2;
 QueueHandle_t xQueueData3;
 QueueHandle_t xQueueData4;
 QueueHandle_t xQueueData5;
 QueueHandle_t xQueueData6;
-QueueHandle_t xQueuebtns;
+
+extern QueueHandle_t xQueuebtns;
+
 QueueHandle_t xQueueCalendar;
 
 TaskHandle_t Rx_Task_Handle = NULL;
@@ -113,7 +105,7 @@ TaskHandle_t DisplayT4_Task_Handle = NULL;
 TaskHandle_t DisplayT5_Task_Handle = NULL;
 TaskHandle_t DisplayT6_Task_Handle = NULL;
 TaskHandle_t SetupScreen_Task_Handle = NULL;
-TaskHandle_t ButtonsPoll_Task_Handle = NULL;
+
 
 /*****************************************************************************/
 //*****************************************************************************
@@ -124,7 +116,7 @@ TaskHandle_t ButtonsPoll_Task_Handle = NULL;
 
 xSemaphoreHandle g_pLCDSemaphore;
 xSemaphoreHandle g_pRTCSemaphore;
-xSemaphoreHandle g_pSetupSemaphore;
+
 TickType_t g_xSensorTimeOut = pdMS_TO_TICKS(5000);
 
 //*****************************************************************************
@@ -179,7 +171,7 @@ void itoa_new(uint16_t val, char * str)
 
 //*****************************************************************************
 //
-// Configure the UART and its pins.  This must be called before UARTprintf().
+// Configure the UART and its pins. This must be called before UARTprintf().
 //
 //*****************************************************************************
 void
@@ -211,6 +203,7 @@ ConfigureUART(void)
     // Initialize the UART for console I/O.
     //
     UARTStdioConfig(0, 115200, 16000000);
+		
 }
 
 //*****************************************************************************
@@ -320,7 +313,7 @@ CANIntHandler(void)
 
 //*********************************************************************************
 //
-// Sends the sync signal to all slaves on the CAN network								
+// Sends sync signal to all slaves on the CAN network								
 //
 //*********************************************************************************
 
@@ -345,7 +338,7 @@ static void Tx_Task(void *pvParameters)
 
 //*********************************************************************************
 //
-// Receives data from sensor
+// Receives data from sensors
 //
 //*********************************************************************************
 
@@ -371,14 +364,10 @@ static void Rx_Task(void *pvParameters)
 		if(g_bRXFlag)
 		{
 			
-				taskENTER_CRITICAL();
 				ReceiveData( &node );
-				taskEXIT_CRITICAL();
 			
 				g_bRXFlag = 0;
-			
-				//ulNotifiedValue = 0;
-			
+
 				// Then send the msg received to the queue corresponding to the correct sensor
 				// Do not block if queue is full
 				switch(node.node_nr)
@@ -401,87 +390,6 @@ static void Rx_Task(void *pvParameters)
 		}
 			
 	}
-}
-
-//*****************************************************************************
-//
-//	Polls buttons every 1ms to get their debounced status
-//	Fills a queue with the state of the buttons
-//
-//*****************************************************************************
-
-static void ButtonsPoll_Task(void *pvparameters)
-{
-	
-	TickType_t xLastWakeTime;
-	// Initialize the xLastWakeTime variable with the current time.
-  xLastWakeTime = xTaskGetTickCount();
-	
-	SetupScreen_t setup1;
-	setup1.Unlocked = FALSE;
-	setup1.Tank.length = 23000;
-	setup1.Tank.radius = 23000;
-	setup1.cursor = HOUR;
-	
-	BtnMr_Init();
-	
-	while(1)
-	{
-		
-		// If buttons are locked keep updating the calendar setup parameters
-		if( setup1.Unlocked == FALSE )
-		{
-			// check if button is unlocked
-			BtnMr( NULL, NULL, &setup1.Unlocked );
-		
-			xSemaphoreTake( g_pRTCSemaphore, portMAX_DELAY );
-			Rtc_GetDate( &setup1.calendar );
-			xSemaphoreGive( g_pRTCSemaphore );
-		
-		}
-
-		// If buttons are unlocked then the setup parameters can be modified
-		else
-		{	
-			setup1.calendar.tm_sec = 0;
-
-			switch(setup1.cursor)
-			{
-				case HOUR: 		BtnMr( &setup1.cursor, &setup1.calendar.tm_hour, &setup1.Unlocked ); break;
-				case MIN:			BtnMr( &setup1.cursor, &setup1.calendar.tm_min, &setup1.Unlocked ); break;
-				
-				case DAY:			BtnMr( &setup1.cursor, &setup1.calendar.tm_mday, &setup1.Unlocked ); break;
-				case MONTH:		BtnMr( &setup1.cursor, &setup1.calendar.tm_mon, &setup1.Unlocked ); break;
-				case YEAR:		BtnMr( &setup1.cursor, &setup1.calendar.tm_year, &setup1.Unlocked ); break;
-				
-				case RADIUS:	BtnMr( &setup1.cursor, &setup1.Tank.radius, &setup1.Unlocked ); break;
-				case LENGTH:	BtnMr( &setup1.cursor, &setup1.Tank.length, &setup1.Unlocked ); break; 
-			}
-
-			// adjust rollover
-			RollOverAdjust( &setup1 );
-		
-		}
-		
-
-		//
-		// Send the updated calendar values into the queue to be received by the setup display task
-		// which runs at a lower priority
-		//
-		xQueueSend( xQueuebtns, &setup1, (TickType_t) 0 );
-
-		//
-		// Block the task for 1ms for Three reasons:
-		// 1: Poll the buttons periodically every 1ms
-		// 2: Allow other tasks to run during this 1ms
-		// 3: For debounce routine to run properly there has to be atleast a 1ms delay between each call
-		//    for the the function
-		//
-		vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS( 10 ) );
-		
-		
-	}
-	
 }
 
 
@@ -650,14 +558,11 @@ static void DispCal_Task( void *pvparameters )
 	while(1)
 	{				
 		
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
-		
 		LcdNormalScreenBase();
 		
 		// Get date from register
-		taskENTER_CRITICAL();
 		Rtc_GetDate( &calendar );		
-		taskEXIT_CRITICAL();
+	
 		
 		// convert the edited values into ascii
 		strftime( cHr, 3, "%H", &calendar );
@@ -700,15 +605,12 @@ static void DisplayT1_Task( void *pvparameters )
 	while(1)
 	{
 		
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
-		
 		// Wait for the queue to be full
 		xMsg1Received = xQueueReceive( xQueueData1, &node1_disp, g_xSensorTimeOut );		
 		
 		if( xMsg1Received == pdTRUE )
 		{
-			ui16T1SensorData = *((uint16_t *)node1_disp.node_data_ptr);
-		
+			ui16T1SensorData = *((uint16_t *)node1_disp.node_data_ptr);		
 			itoa_new( ui16T1SensorData, t1);
 		}
 		else
@@ -738,8 +640,6 @@ static void DisplayT2_Task( void *pvparameters )
 	
 	while(1)
 	{
-
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
 		
 		// Wait for the queue to be full
 		xMsg2Received = xQueueReceive( xQueueData2, &node2_disp, g_xSensorTimeOut );		
@@ -779,8 +679,6 @@ static void DisplayT3_Task( void *pvparameters )
 	while(1)
 	{	
 
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
-		
 		// Wait for the queue to be full
 		xMsg3Received = xQueueReceive( xQueueData3, &node3_disp, g_xSensorTimeOut );		
 		
@@ -818,8 +716,6 @@ static void DisplayT4_Task( void *pvparameters )
 	
 	while(1)
 	{
-		
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
 		
 		// Wait for the queue to be full
 		xMsg4Received = xQueueReceive( xQueueData4, &node4_disp, g_xSensorTimeOut );		
@@ -860,8 +756,6 @@ static void DisplayT5_Task( void *pvparameters )
 	while(1)
 	{
 		
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
-		
 		// Wait for the queue to be full
 		xMsg5Received = xQueueReceive( xQueueData5, &node5_disp, g_xSensorTimeOut );		
 		
@@ -898,8 +792,6 @@ static void DisplayT6_Task( void *pvparameters )
 	
 	while(1)
 	{
-		
-		//xSemaphoreTake( g_pSetupSemaphore, portMAX_DELAY );
 		
 		// Wait for the queue to be full
 		xMsg6Received = xQueueReceive( xQueueData6, &node6_disp, g_xSensorTimeOut );		
@@ -941,8 +833,10 @@ main(void)
     // Initialize the UART and configure it for 115,200, 8-N-1 operation.
     //
     ConfigureUART();
-		LcdMr_Init();
+	
 		Rtc_Init();
+		LcdMr_Init();
+		
 	
     //
     // Print demo introduction.
@@ -954,11 +848,10 @@ main(void)
 /************************************************************************/
 
     //
-    // Create a mutex to guard the LCD.
+    // Create a mutex:
     //
     g_pLCDSemaphore = xSemaphoreCreateMutex();
 		g_pRTCSemaphore = xSemaphoreCreateMutex();
-		g_pSetupSemaphore = xSemaphoreCreateMutex();
 
 		// Create a queue capable of containing 1 uint16_t values.
 		// this queue will be used to receive the sensor data received from the CAN Network
@@ -968,9 +861,6 @@ main(void)
 		xQueueData4 = xQueueCreate( 1, sizeof( Node_t ) );
 		xQueueData5 = xQueueCreate( 1, sizeof( Node_t ) );
 		xQueueData6 = xQueueCreate( 1, sizeof( Node_t ) );
-
-		xQueuebtns = xQueueCreate( 1, sizeof( SetupScreen_t ) );
-
 
 		xTaskCreate( Tx_Task, "Tx_Task", 100, NULL, 11, &Tx_Task_Handle ); 
 		
@@ -988,7 +878,15 @@ main(void)
 		
 		xTaskCreate( SetupScreen_Task, "SetupScreen_Task", 100, NULL, 9, &SetupScreen_Task_Handle );
 
-		xTaskCreate( ButtonsPoll_Task, "ButtonsPoll_Task", 100, NULL, 10, &ButtonsPoll_Task_Handle );
+
+		// create ButtonsPoll_Task
+		if(ButtonsPoll_Task_Init() != TRUE)
+		{
+			while(1)
+			{
+				// Loop here if task was not created
+			}
+		}
 		
     //
     // Start the scheduler.  This should not return.
@@ -999,7 +897,6 @@ main(void)
     // In case the scheduler returns for some reason, print an error and loop
     // forever.
     //
-
     while(1)
     {
     }
@@ -1013,55 +910,3 @@ void vApplicationTickHook( void )
 }
 
 
-void RollOverAdjust( SetupScreen_t * setup )
-{
-	
-		// adjust calendar rollover upper boundry
-		if( setup->calendar.tm_min > 59)
-		{
-			setup->calendar.tm_min = 0;
-		}
-		if( setup->calendar.tm_hour > 23)
-		{
-			setup->calendar.tm_hour = 0;
-		}
-		if( setup->calendar.tm_mday > 31)
-		{
-			setup->calendar.tm_mday = 1;
-		}
-		if( setup->calendar.tm_mon > 11 )
-		{
-			setup->calendar.tm_mon = 0;
-		}
-		
-		// adjust cursor rollover
-		if( setup->cursor > LENGTH )
-		{
-			setup->cursor = HOUR;
-		}
-		
-		// adjust calendar rollover lower boundry
-		if( setup->calendar.tm_min < 0)
-		{
-			setup->calendar.tm_min = 59;
-		}
-		if( setup->calendar.tm_hour < 0 )
-		{
-			setup->calendar.tm_hour = 23;
-		}
-		if( setup->calendar.tm_mday < 1 )
-		{
-			setup->calendar.tm_mday = 31;
-		}
-		if( setup->calendar.tm_mon < 0 )
-		{
-			setup->calendar.tm_mon = 11;
-		}
-		
-		// adjust cursor rollover
-		if( setup->cursor < HOUR )
-		{
-			setup->cursor = LENGTH;
-		}
-		
-}

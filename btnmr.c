@@ -30,11 +30,6 @@ static Debouncer port1;
 
 extern uint32_t ui32TickCounter;
 
-static uint32_t up_scroll_speed = 1;
-static uint32_t down_scroll_speed = 1;
-//static bool EditFlag = 0;
-//static btnstate_t retval = 0;
-
 //*****************************************************************************
 
 void BtnMr_Init(void)
@@ -50,109 +45,112 @@ void BtnMr_Init(void)
 void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr)
 {
 	
-					ButtonProcess(&port1, Port1ReadBits());
-					switch((ButtonCurrent(&port1, ALL_BUTTONS)))
+	static uint32_t up_scroll_speed = 1;
+	static uint32_t down_scroll_speed = 1;
+	
+	ButtonProcess(&port1, Port1ReadBits());
+	switch((ButtonCurrent(&port1, ALL_BUTTONS)))
+	{
+		
+		case LEFT_BUTTON:	
+		{
+			
+				if(*EditFlag_ptr)
+				{
+					if((ui32TickCounter % APP_BUTTON_POLL_DIVIDER_R_L) == 0)
 					{
-						
-						case LEFT_BUTTON:	
+						if(cursor_ptr != NULL)
 						{
-							
-								if(*EditFlag_ptr)
-								{
-									if((ui32TickCounter % APP_BUTTON_POLL_DIVIDER_R_L) == 0)
-									{
-										if(cursor_ptr != NULL)
-										{
-											(*cursor_ptr)--;
-										}											
-									}
-								}
-							
-							break;
-						}
-						
-						case RIGHT_BUTTON:	
+							(*cursor_ptr)--;
+						}											
+					}
+				}
+			
+			break;
+		}
+		
+		case RIGHT_BUTTON:	
+		{
+			
+				if(*EditFlag_ptr)
+				{
+					if((ui32TickCounter % APP_BUTTON_POLL_DIVIDER_R_L) == 0)
+					{
+						if(cursor_ptr != NULL )
 						{
-							
-								if(*EditFlag_ptr)
-								{
-									if((ui32TickCounter % APP_BUTTON_POLL_DIVIDER_R_L) == 0)
-									{
-										if(cursor_ptr != NULL )
-										{
-											(*cursor_ptr)++;
-										}
-									}
-								}
-							
-							break;
-						}
-						
-						case UP_BUTTON:	
-						{
-							
-								if(*EditFlag_ptr)
-								{
-									if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN - up_scroll_speed) ) == 0)
-									{
-										if(counter_ptr != NULL )
-										{
-											up_scroll_speed = up_scroll_speed + 2;
-											(*counter_ptr)++;
-										}
-									}
-								}
-							
-							break;
-						}
-						
-						case DOWN_BUTTON:	
-						{
-							
-								if(*EditFlag_ptr)
-								{
-									if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN - down_scroll_speed)) == 0)
-									{
-										if(counter_ptr != NULL )
-										{
-											down_scroll_speed = down_scroll_speed + 2;
-											(*counter_ptr)--;
-										}
-									}
-								}
-							
-							break;
-						}
-						
-						case SELECT_BUTTON:	
-						{
-							// hold the select button for a while to enter the editing mode
-							// the hold time is in multiples of APP_BUTTON_POLL_DIVIDER_MODE_SELECT
-							// increase the APP_BUTTON_POLL_DIVIDER_MODE_SELECT to increase the hold time
-							if((ui32TickCounter % APP_BUTTON_POLL_DIVIDER_MODE_SELECT) == 0)
-							{
-								if( EditFlag_ptr != NULL )
-								{
-								 (*EditFlag_ptr) ^= 1;
-								}
-							}
-							break;
+							(*cursor_ptr)++;
 						}
 					}
+				}
+			
+			break;
+		}
+		
+		case UP_BUTTON:	
+		{
+			
+				if(*EditFlag_ptr)
+				{
+					if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN - up_scroll_speed) ) == 0)
+					{
+						if(counter_ptr != NULL )
+						{
+							up_scroll_speed = up_scroll_speed + 2;
+							(*counter_ptr)++;
+						}
+					}
+				}
+			
+			break;
+		}
+		
+		case DOWN_BUTTON:	
+		{
+			
+				if(*EditFlag_ptr)
+				{
+					if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN - down_scroll_speed)) == 0)
+					{
+						if(counter_ptr != NULL )
+						{
+							down_scroll_speed = down_scroll_speed + 2;
+							(*counter_ptr)--;
+						}
+					}
+				}
+			
+			break;
+		}
+		
+		case SELECT_BUTTON:	
+		{
+			// hold the select button for a while to enter the editing mode
+			// the hold time is in multiples of APP_BUTTON_POLL_DIVIDER_MODE_SELECT
+			// increase the APP_BUTTON_POLL_DIVIDER_MODE_SELECT to increase the hold time
+			if((ui32TickCounter % APP_BUTTON_POLL_DIVIDER_MODE_SELECT) == 0)
+			{
+				if( EditFlag_ptr != NULL )
+				{
+				 (*EditFlag_ptr) ^= 1;
+				}
+			}
+			break;
+		}
+	}
 
-					
-					// if buttons up or down are released reset the scroll speed multiplier
-					if(ButtonReleased(&port1, UP_BUTTON) == UP_BUTTON)
-					{
-						up_scroll_speed = 1;
-					}
-					
-					// if buttons up or down are released reset the scroll speed multiplier
-					if(ButtonReleased(&port1, DOWN_BUTTON) == DOWN_BUTTON)
-					{
-						down_scroll_speed = 1;
-					}
-					
+	
+	// if buttons up or down are released reset the scroll speed multiplier
+	if(ButtonReleased(&port1, UP_BUTTON) == UP_BUTTON)
+	{
+		up_scroll_speed = 1;
+	}
+	
+	// if buttons up or down are released reset the scroll speed multiplier
+	if(ButtonReleased(&port1, DOWN_BUTTON) == DOWN_BUTTON)
+	{
+		down_scroll_speed = 1;
+	}
+	
 				
 }		
 	
