@@ -7,10 +7,12 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 #include "driverlib/sysctl.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+
 #include "inc/hw_ints.h"
 #include "driverlib/interrupt.h"
 #include "driverlib/pin_map.h"

@@ -52,7 +52,7 @@
 #include "LCD20x04.h"
 #include "apptypes.h"
 #include "buttonspoll_task.h"
-
+#include "display_task.h"
 
 //*****************************************************************************
 //
@@ -77,6 +77,7 @@ volatile bool g_bRXFlag = 0;
 void vApplicationTickHook( void );	
 volatile uint32_t ui32TickCounter;	
 
+AppMode_t g_eAppMode = NORMAL;
 
 /*****************************************************************************/
 //
@@ -96,7 +97,6 @@ QueueHandle_t xQueueCalendar;
 
 TaskHandle_t Rx_Task_Handle = NULL;
 TaskHandle_t Tx_Task_Handle = NULL;
-TaskHandle_t Display_Task_Handle = NULL;
 TaskHandle_t DispCal_Task_Handle = NULL;
 TaskHandle_t DisplayT1_Task_Handle = NULL;
 TaskHandle_t DisplayT2_Task_Handle = NULL;
@@ -868,19 +868,28 @@ main(void)
 		// this will be as if the interrupt did the processing of the task
 		xTaskCreate( Rx_Task, "Rx_Task", 100, NULL, 12, &Rx_Task_Handle );
 		
-		xTaskCreate( DispCal_Task, "DispCal_Task", 100, NULL, 7, &DispCal_Task_Handle );
-		xTaskCreate( DisplayT1_Task, "DisplayT1_Task", 100, NULL, 6, &DisplayT1_Task_Handle );
-		xTaskCreate( DisplayT2_Task, "DisplayT2_Task", 100, NULL, 5, &DisplayT2_Task_Handle );
-		xTaskCreate( DisplayT3_Task, "DisplayT3_Task", 100, NULL, 4, &DisplayT3_Task_Handle );
-		xTaskCreate( DisplayT4_Task, "DisplayT4_Task", 100, NULL, 3, &DisplayT4_Task_Handle );
-		xTaskCreate( DisplayT5_Task, "DisplayT5_Task", 100, NULL, 2, &DisplayT5_Task_Handle );
-		xTaskCreate( DisplayT6_Task, "DisplayT6_Task", 100, NULL, 1, &DisplayT6_Task_Handle );
+		//xTaskCreate( DispCal_Task, "DispCal_Task", 100, NULL, 7, &DispCal_Task_Handle );
+		//xTaskCreate( DisplayT1_Task, "DisplayT1_Task", 100, NULL, 6, &DisplayT1_Task_Handle );
+		//xTaskCreate( DisplayT2_Task, "DisplayT2_Task", 100, NULL, 5, &DisplayT2_Task_Handle );
+		//xTaskCreate( DisplayT3_Task, "DisplayT3_Task", 100, NULL, 4, &DisplayT3_Task_Handle );
+		//xTaskCreate( DisplayT4_Task, "DisplayT4_Task", 100, NULL, 3, &DisplayT4_Task_Handle );
+		//xTaskCreate( DisplayT5_Task, "DisplayT5_Task", 100, NULL, 2, &DisplayT5_Task_Handle );
+		//xTaskCreate( DisplayT6_Task, "DisplayT6_Task", 100, NULL, 1, &DisplayT6_Task_Handle );
 		
 		xTaskCreate( SetupScreen_Task, "SetupScreen_Task", 100, NULL, 9, &SetupScreen_Task_Handle );
 
 
 		// create ButtonsPoll_Task
 		if(ButtonsPoll_Task_Init() != TRUE)
+		{
+			while(1)
+			{
+				// Loop here if task was not created
+			}
+		}
+		
+		// create Display_Task
+		if(Display_Task_Init() != TRUE)
 		{
 			while(1)
 			{

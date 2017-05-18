@@ -35,3 +35,4 @@
 .\objects\tank_monitor_ecu.o: LCD20x04.h
 .\objects\tank_monitor_ecu.o: apptypes.h
 .\objects\tank_monitor_ecu.o: buttonspoll_task.h
+.\objects\tank_monitor_ecu.o: display_task.h

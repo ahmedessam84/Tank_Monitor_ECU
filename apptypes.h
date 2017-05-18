@@ -33,7 +33,11 @@ typedef struct
 	cursor_t cursor;
 }SetupScreen_t;
 
-
+typedef enum
+{
+	NORMAL,
+	SETUP
+}AppMode_t;
 
 	
 // 

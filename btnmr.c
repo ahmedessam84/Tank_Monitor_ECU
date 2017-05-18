@@ -42,7 +42,7 @@ void BtnMr_Init(void)
 // it updates the position of the cursor and the counter and the edit flag periodically
 // the edit flag enables and disables the operation of the other buttons
 
-void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr)
+void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr )
 {
 	
 	static uint32_t up_scroll_speed = 1;
