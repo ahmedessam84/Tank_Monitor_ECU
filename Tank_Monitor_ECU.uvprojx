@@ -474,6 +474,11 @@
               <FileType>1</FileType>
               <FilePath>.\display_task.c</FilePath>
             </File>
+            <File>
+              <FileName>txrx_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\txrx_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -548,6 +553,11 @@
               <FileName>display_task.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\display_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>txrx_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\txrx_task.h</FilePath>
             </File>
           </Files>
         </Group>

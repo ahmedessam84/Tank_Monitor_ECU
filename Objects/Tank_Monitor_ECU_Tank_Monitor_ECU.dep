@@ -1,5 +1,5 @@
 Dependencies for Project 'Tank_Monitor_ECU', Target 'Tank_Monitor_ECU': (DO NOT MODIFY !)
-F (.\Tank_Monitor_ECU.c)(0x591F44D0)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\tank_monitor_ecu.o --omf_browse .\objects\tank_monitor_ecu.crf --depend .\objects\tank_monitor_ecu.d)
+F (.\Tank_Monitor_ECU.c)(0x591F55F5)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\tank_monitor_ecu.o --omf_browse .\objects\tank_monitor_ecu.crf --depend .\objects\tank_monitor_ecu.d)
 I (D:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x57F65B18)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F65B18)
 I (D:\Keil_v5\ARM\ARMCC\include\time.h)(0x57F65B18)
@@ -30,13 +30,12 @@ I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\semphr.
 I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_ints.h)(0x5877B8E4)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\interrupt.h)(0x5877B8E1)
 I (cancom.h)(0x591C8169)
-I (lcdmr.h)(0x58F3CE5F)
 I (rtc.h)(0x58F03D84)
+I (apptypes.h)(0x591F54E9)
 I (btnmr.h)(0x58F4A92A)
-I (LCD20x04.h)(0x58F03D84)
-I (apptypes.h)(0x591CA801)
 I (buttonspoll_task.h)(0x591B5BB2)
 I (display_task.h)(0x591F44D0)
+I (txrx_task.h)(0x591F5524)
 F (.\btn.c)(0x58F03D84)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\btn.o --omf_browse .\objects\btn.crf --depend .\objects\btn.d)
 I (btn.h)(0x58F03D84)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F65B18)
@@ -71,7 +70,7 @@ I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\systick.h)(0x5877B8E1)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\interrupt.h)(0x5877B8E1)
 I (btn.h)(0x58F03D84)
 I (btnmr.h)(0x58F4A92A)
-F (.\cancom.c)(0x591C8169)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\cancom.o --omf_browse .\objects\cancom.crf --depend .\objects\cancom.d)
+F (.\cancom.c)(0x591F4EA0)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\cancom.o --omf_browse .\objects\cancom.crf --depend .\objects\cancom.d)
 I (D:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x57F65B18)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F65B18)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_memmap.h)(0x5877B8E4)
@@ -262,7 +261,7 @@ I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_types.h)(0x5877B8E4)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\can.h)(0x5877B8E1)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\debug.h)(0x5877B8E1)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\interrupt.h)(0x5877B8E1)
-F (.\buttonspoll_task.c)(0x591F410D)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\buttonspoll_task.o --omf_browse .\objects\buttonspoll_task.crf --depend .\objects\buttonspoll_task.d)
+F (.\buttonspoll_task.c)(0x591F4EA0)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\buttonspoll_task.o --omf_browse .\objects\buttonspoll_task.crf --depend .\objects\buttonspoll_task.d)
 I (D:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x57F65B18)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F65B18)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_memmap.h)(0x5877B8E4)
@@ -286,10 +285,10 @@ I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\semphr.
 I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_ints.h)(0x5877B8E4)
 I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\interrupt.h)(0x5877B8E1)
 I (btnmr.h)(0x58F4A92A)
-I (apptypes.h)(0x591CA801)
+I (apptypes.h)(0x591F54E9)
 I (D:\Keil_v5\ARM\ARMCC\include\time.h)(0x57F65B18)
 I (rtc.h)(0x58F03D84)
-F (.\display_task.c)(0x591F44DE)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\display_task.o --omf_browse .\objects\display_task.crf --depend .\objects\display_task.d)
+F (.\display_task.c)(0x591F4EA0)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\display_task.o --omf_browse .\objects\display_task.crf --depend .\objects\display_task.d)
 I (D:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x57F65B18)
 I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F65B18)
 I (D:\Keil_v5\ARM\ARMCC\include\time.h)(0x57F65B18)
@@ -324,8 +323,39 @@ I (lcdmr.h)(0x58F3CE5F)
 I (rtc.h)(0x58F03D84)
 I (btnmr.h)(0x58F4A92A)
 I (LCD20x04.h)(0x58F03D84)
-I (apptypes.h)(0x591CA801)
+I (apptypes.h)(0x591F54E9)
 I (display_task.h)(0x591F44D0)
+F (.\txrx_task.c)(0x591F5524)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I D:\ti\TivaWare_C_Series-2.1.3.156\ -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib -I D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS -I D:\ti\TivaWare_C_Series-2.1.3.156\usblib -I D:\ti\TivaWare_C_Series-2.1.3.156\utils -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\MemMang -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\ -I ..\Tank_Monitor_ECU -I D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F --c99-ID:\Projects\Tank_Monitor_ECU\RTE\_Tank_Monitor_ECU-ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include-ID:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123-D__UVISION_VERSION="522" -D_RTE_ -DTM4C123GH6PM -Drvmdk -DPART_TM4C123GH6PM -DTARGET_IS_TM4C123_RB1-o .\objects\txrx_task.o --omf_browse .\objects\txrx_task.crf --depend .\objects\txrx_task.d)
+I (D:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x57F65B18)
+I (D:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F65B18)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_memmap.h)(0x5877B8E4)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_types.h)(0x5877B8E4)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_can.h)(0x5877B8E4)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\gpio.h)(0x588CE6F5)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\pin_map.h)(0x5877B8E1)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rom.h)(0x5877B8E1)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\sysctl.h)(0x5877B8E1)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\can.h)(0x5877B8E1)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\inc\hw_ints.h)(0x5877B8E4)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\interrupt.h)(0x5877B8E1)
+I (cancom.h)(0x591C8169)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\utils\uartstdio.h)(0x588E02B9)
+I (D:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x57F65B18)
+I (apptypes.h)(0x591F54E9)
+I (D:\Keil_v5\ARM\ARMCC\include\time.h)(0x57F65B18)
+I (btnmr.h)(0x58F4A92A)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\FreeRTOS.h)(0x5877B8E8)
+I (D:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x57F65B18)
+I (..\Tank_Monitor_ECU\FreeRTOSConfig.h)(0x58F03D84)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\projdefs.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\portable.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\deprecated_definitions.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\mpu_wrappers.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\task.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\list.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\queue.h)(0x5877B8E8)
+I (D:\ti\TivaWare_C_Series-2.1.3.156\third_party\FreeRTOS\Source\include\semphr.h)(0x5877B8E8)
 F (.\buttonspoll_task.h)(0x591B5BB2)()
 F (.\switch_task.h)(0x58F03D84)()
 F (.\rtc.h)(0x58F03D84)()
@@ -338,6 +368,7 @@ F (.\delay.h)(0x58F03D84)()
 F (.\cancom.h)(0x591C8169)()
 F (.\btnmr.h)(0x58F4A92A)()
 F (.\btn.h)(0x58F03D84)()
-F (.\apptypes.h)(0x591CA801)()
+F (.\apptypes.h)(0x591F54E9)()
 F (.\display_task.h)(0x591F44D0)()
+F (.\txrx_task.h)(0x591F5524)()
 F (D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk\driverlib.lib)(0x5877B8E1)()

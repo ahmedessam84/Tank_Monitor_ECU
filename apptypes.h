@@ -13,11 +13,21 @@
 extern "C"
 {
 #endif
-	
-#include <time.h>
 
+
+#include <stdbool.h>
+#include <stdint.h>	
+#include <time.h>
+#include "btnmr.h"
+	
 #define TRUE 		1
 #define FALSE 	0
+
+#define RX_PRIORITY						12	
+#define TX_PRIORITY						11
+#define BUTTONS_PRIORITY			10
+#define DISPLAY_PRIORITY			5
+	
 	
 typedef struct
 {

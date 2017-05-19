@@ -112,7 +112,7 @@ uint32_t Display_Task_Init( void )
 	
 	LcdMr_Init();
 	
-	if( xTaskCreate( Display_Task, "Display_Task", 100, NULL, 5, &Display_Task_Handle ) == pdTRUE)
+	if( xTaskCreate( Display_Task, "Display_Task", 100, NULL, DISPLAY_PRIORITY, &Display_Task_Handle ) == pdTRUE)
 	{
 	  //
 	  // success

@@ -29,10 +29,9 @@
 .\objects\tank_monitor_ecu.o: D:\ti\TivaWare_C_Series-2.1.3.156\inc/hw_ints.h
 .\objects\tank_monitor_ecu.o: D:\ti\TivaWare_C_Series-2.1.3.156\driverlib/interrupt.h
 .\objects\tank_monitor_ecu.o: cancom.h
-.\objects\tank_monitor_ecu.o: lcdmr.h
 .\objects\tank_monitor_ecu.o: rtc.h
-.\objects\tank_monitor_ecu.o: btnmr.h
-.\objects\tank_monitor_ecu.o: LCD20x04.h
 .\objects\tank_monitor_ecu.o: apptypes.h
+.\objects\tank_monitor_ecu.o: btnmr.h
 .\objects\tank_monitor_ecu.o: buttonspoll_task.h
 .\objects\tank_monitor_ecu.o: display_task.h
+.\objects\tank_monitor_ecu.o: txrx_task.h

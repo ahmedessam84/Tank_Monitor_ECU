@@ -13,6 +13,7 @@
 #include "driverlib/interrupt.h"
 #include "driverlib/pin_map.h"
 #include "cancom.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -48,9 +49,125 @@
 	// Data structure to be received
 	//
 	static tCANMsgObject rxCANMessage;
+
+extern TaskHandle_t Rx_Task_Handle;
+
+
+//*****************************************************************************
+//
+// A flag to indicate that some transmission error occurred.
+//
+//*****************************************************************************
+volatile bool g_bErrFlag = 0;
+volatile bool g_bRXFlag = 0;
+
+//*****************************************************************************
+//
+// This function is the interrupt handler for the CAN peripheral.  It checks
+// for the cause of the interrupt, and maintains a count of all messages that
+// have been transmitted.
+//
+//*****************************************************************************
+void
+CANIntHandler(void)
+{
+    uint32_t ui32Status;
 	
-	void CANIntHandler(void);
+		BaseType_t xHigherPriorityTaskWoken;
 	
+	/* xHigherPriorityTaskWoken must be initialised to pdFALSE.  If calling
+    vTaskNotifyGiveFromISR() unblocks the handling task, and the priority of
+    the handling task is higher than the priority of the currently running task,
+    then xHigherPriorityTaskWoken will automatically get set to pdTRUE. */
+	
+		xHigherPriorityTaskWoken = pdFALSE;
+	
+	
+    //
+    // Read the CAN interrupt status to find the cause of the interrupt
+    //
+    ui32Status = CANIntStatus(CAN0_BASE, CAN_INT_STS_CAUSE);
+
+    //
+    // If the cause is a controller status interrupt, then get the status
+    //
+    if(ui32Status == CAN_INT_INTID_STATUS)
+    {
+        //
+        // Read the controller status.  This will return a field of status
+        // error bits that can indicate various errors.  Error processing
+        // is not done in this example for simplicity.  Refer to the
+        // API documentation for details about the error status bits.
+        // The act of reading this status will clear the interrupt.  If the
+        // CAN peripheral is not connected to a CAN bus with other CAN devices
+        // present, then errors will occur and will be indicated in the
+        // controller status.
+        //
+        ui32Status = CANStatusGet(CAN0_BASE, CAN_STS_CONTROL);
+
+        //
+        // Set a flag to indicate some errors may have occurred.
+        //
+        g_bErrFlag = 1;
+			
+				//UARTprintf(" CAN status %04X\n", ui32Status);
+				
+    }
+
+    //
+    // Check if the cause is message object 1, which what we are using for
+    // sending messages.
+    // the number indicated in ui32Status is for the message object id in case of msg RX or TX
+		
+    else if(ui32Status == 1)
+    {
+        //
+        // Getting to this point means that the RX interrupt occurred on
+        // message object 1, and the message RX is complete.  Clear the
+        // message object interrupt.
+        //
+        CANIntClear(CAN0_BASE, 1);
+
+			  //
+        // Set flag to indicate received message is pending.
+        //
+        g_bRXFlag = 1;
+
+        //
+        // Since the message was sent, clear any error flags.
+        //
+        g_bErrFlag = 0;
+			
+				vTaskNotifyGiveFromISR( Rx_Task_Handle, &xHigherPriorityTaskWoken );
+			
+				/* Force a context switch if xHigherPriorityTaskWoken is now set to pdTRUE.
+				The macro used to do this is dependent on the port and may be called 
+				*/
+				portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+				
+    }
+		//
+		// message object 2 is used for transmission, when the cause of interrupt is msg obj 2 it means a msg was transmitted
+		//
+		else if(ui32Status == 2)
+		{
+			CANIntClear(CAN0_BASE, 2);
+		}
+
+    //
+    // Otherwise, something unexpected caused the interrupt.  This should
+    // never happen.
+    //
+    else
+    {
+        //
+        // Spurious interrupt handling can go here.
+        //
+    }
+}
+
+
+
 // Intializes the CAN module for Master node operation which requires:
 // Master receives any msg on network
 // Master sends a sync msg every 2s

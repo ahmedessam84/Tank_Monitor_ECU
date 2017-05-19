@@ -116,7 +116,7 @@ uint32_t ButtonsPoll_Task_Init( void )
 	xQueuebtns = xQueueCreate( 1, sizeof( SetupScreen_t ) );
 
 
-	if( xTaskCreate( ButtonsPoll_Task, "ButtonsPoll_Task", 100, NULL, 10, &ButtonsPoll_Task_Handle ) == pdTRUE)
+	if( xTaskCreate( ButtonsPoll_Task, "ButtonsPoll_Task", 100, NULL, BUTTONS_PRIORITY, &ButtonsPoll_Task_Handle ) == pdTRUE)
 	{
 	  //
 	  // success

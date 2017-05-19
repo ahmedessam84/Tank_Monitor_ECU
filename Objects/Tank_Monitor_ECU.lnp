@@ -18,6 +18,7 @@
 ".\objects\can.o"
 ".\objects\buttonspoll_task.o"
 ".\objects\display_task.o"
+".\objects\txrx_task.o"
 "D:\ti\TivaWare_C_Series-2.1.3.156\driverlib\rvmdk\driverlib.lib"
 --library_type=microlib --strict --scatter "Tank_Monitor_ECU.sct"
 --entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols
