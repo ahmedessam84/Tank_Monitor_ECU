@@ -34,3 +34,4 @@
 .\objects\display_task.o: btnmr.h
 .\objects\display_task.o: LCD20x04.h
 .\objects\display_task.o: apptypes.h
+.\objects\display_task.o: display_task.h

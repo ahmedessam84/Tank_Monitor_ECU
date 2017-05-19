@@ -28,18 +28,20 @@
 #include "btnmr.h"
 #include "LCD20x04.h"
 #include "apptypes.h"
-
-#define SENSOR_TIMEOUT_PERIOD		5000
+#include "display_task.h"
 
 TaskHandle_t Display_Task_Handle = NULL;
+
 extern AppMode_t g_eAppMode;
 extern xSemaphoreHandle g_pLCDSemaphore;
-extern QueueHandle_t xQueueData1;
+extern QueueHandle_t xQueueData;
 extern uint32_t ui32TickCounter;
 extern void itoa_new(uint16_t , char * );
+extern QueueHandle_t xQueuebtns;
 
 void Display_Calendar( void );
 void Display_Sensors( void );
+void Display_Setup_Data( void );
 
 //*********************************************************************
 //
@@ -85,19 +87,11 @@ static void Display_Task( void * pvparameters )
 			// Setup application mode display	
 			case SETUP:
 			{
-				// Display Setup screen template
-				LcdSetupScreenBase();
-				
-				
-				
-				
-				
-				
-				
-				
-				
+				// Display Setup screen NOTE: modification of parameters are done by ButtonsPoll_Task() 
+				Display_Setup_Data();
 				
 				break;
+				
 			}
 			
 		}
@@ -142,9 +136,10 @@ uint32_t Display_Task_Init( void )
 //	Function to display the calendar on the first line of the LCD screen
 //
 //*****************************************************************************************
-void Display_Calendar( void )
+static void Display_Calendar( void )
 {
 		struct tm calendar;
+
 		char cHr[2];
 		char cMin[2];
 		char cSec[2];
@@ -155,23 +150,12 @@ void Display_Calendar( void )
 		// Get date from rtc hardware
 		Rtc_GetDate( &calendar );		
 		
-		// convert the edited values into ascii
-		strftime( cHr, 3, "%H", &calendar );
-		strftime( cMin, 3, "%M", &calendar );
-		strftime( cSec, 3, "%S", &calendar );
-		strftime( cDay, 3, "%d", &calendar );
-		strftime( cMonth, 3, "%m", &calendar );
-		strftime( cYear, 3, "%y", &calendar );
+		CONVERT_LCD_CALENDAR_TO_ASCII(calendar);
 	
 		// protect the data displayed
 		xSemaphoreTake( g_pLCDSemaphore, portMAX_DELAY );
 		
-		LcdHr(cHr);
-		LcdMin(cMin);
-		LcdSec(cSec);
-		LcdMonth(cMonth);
-		LcdDay(cDay);
-		LcdYr(cYear);
+		DISP_LCD_CALENDAR_NORMAL();
 		
 		xSemaphoreGive( g_pLCDSemaphore );
 		
@@ -183,7 +167,7 @@ void Display_Calendar( void )
 //
 //*****************************************************************************************
 
-void Display_Sensors( void )
+static void Display_Sensors( void )
 {
 	
 	BaseType_t xMsgReceived = pdFALSE;
@@ -195,7 +179,7 @@ void Display_Sensors( void )
 	static uint32_t SensorTimeout[6] = {0};
 	
 	// wait for data to be received from RX_Task, do not block if data was not recieved
-	xMsgReceived = xQueueReceive( xQueueData1, &node_disp, 0 );
+	xMsgReceived = xQueueReceive( xQueueData, &node_disp, 0 );
 	
 	// If data was received, find out which sensor sent the data
 	if( xMsgReceived == pdTRUE )
@@ -244,8 +228,100 @@ void Display_Sensors( void )
 }
 			
 		
+//*****************************************************************************************
+//
+//	Function to display Setup Data on LCD
+//
+//*****************************************************************************************	
+
+static void Display_Setup_Data()
+{
+	static SetupScreen_t DispSetupParams;
+	static bool first_time_flag = TRUE;
+	
+	char cHr[2];
+	char cMin[2];
+	char cSec[2];
+	char cDay[2];
+	char cMonth[2];
+	char cYear[2];
+	char cRadius_buffer[6];
+	char cLength_buffer[6];
+
+	// recieve the updated display parameters from the ButtonsPoll_Task()
+	xQueueReceive( xQueuebtns, &DispSetupParams, (TickType_t) 0 );
+	
+	// convert the edited values into ascii
+	CONVERT_LCD_PARAM_TO_ASCII( DispSetupParams );
+	
+	// If this is the first time to enter setup, display all setup values on the screen for the first time only
+	if( first_time_flag == TRUE )
+	{
+		// Display the current setup parameters values stored in memory
+		LCD_Clear();
 		
+		DISP_LCD_INITIAL_VALUES_SETUP();	
+		
+		LCD_DispCursor();
+		
+		first_time_flag = FALSE;
+		
+	}
+	
+	// if this is not the first time to run this code then update only the value that we are changing using buttons
+	// which are indicated by the cursor
+	else
+	{
+		//
+		// update the display of the parameter currently being modified
+		//
+		switch(DispSetupParams.cursor)
+		{
+			case HOUR: LcdHr(cHr); break;
+			case MIN: LcdMin(cMin); break;
+			case DAY: LcdDay(cDay); break;
+			case MONTH: LcdMonth(cMonth); break;
+			case YEAR: LcdYr(cYear); break;
+			case RADIUS: LcdRadius(cRadius_buffer); break;
+			case LENGTH: LcdLength(cLength_buffer); break;
+		}
+		
+	}
+	
+	//
+	// if setup mode was terminated by locking back the screen, the condition below must be true
+	//
+	if( (DispSetupParams.Unlocked == FALSE) && ( first_time_flag == FALSE) ) 
+	{
+		//**************EXIT SETUP MODE PROCEDURES************//
+		
+		//
+		// Apply changes we made in the setup mode to RTC Hardware
+		//
+		Rtc_SetDate( &DispSetupParams.calendar );
+		
+		//
+		// ON EXIT from the setup mode reset the flag back to TRUE
+		//
+		first_time_flag = TRUE;
+	
+		//
+		// Hide Cursor
+		//
+		LCD_HideCursor();
 
+		//
+		// Clear LCD
+		//
+		LCD_Clear();
+		
+		//
+		// change application mode back to NORMAL state
+		//
+		g_eAppMode = NORMAL;
 
-
-
+		
+	}
+	else{};
+		
+}
