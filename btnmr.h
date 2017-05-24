@@ -43,7 +43,6 @@ typedef enum {HOUR=1, MIN, DAY, MONTH, YEAR, RADIUS, LENGTH}cursor_t;
 
 void BtnMr_Init(void);
 void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr);
-void xGetButtonState( btnstatus_t * btnstatus );
 	
 	
 	

@@ -205,8 +205,9 @@ main(void)
     g_pLCDSemaphore = xSemaphoreCreateMutex();
 		g_pRTCSemaphore = xSemaphoreCreateMutex();
 
-
-		// create Rx_Task
+		//
+		// Create Rx_Task
+		//
 		if(Rx_Task_Init() != TRUE )
 		{
 			while(1)
@@ -215,7 +216,9 @@ main(void)
 			}
 		}
 
-		// create Tx_Task
+		//
+		// Create Tx_Task
+		//
 		if(Tx_Task_Init() != TRUE )
 		{
 			while(1)
@@ -224,7 +227,9 @@ main(void)
 			}
 		}
 
-		// create ButtonsPoll_Task
+		//
+		// Create ButtonsPoll_Task
+		//
 		if(ButtonsPoll_Task_Init() != TRUE)
 		{
 			while(1)
@@ -233,7 +238,9 @@ main(void)
 			}
 		}
 		
-		// create Display_Task
+		//
+		// Create Display_Task
+		//
 		if(Display_Task_Init() != TRUE)
 		{
 			while(1)

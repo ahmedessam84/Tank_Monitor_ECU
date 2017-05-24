@@ -45,9 +45,6 @@ void BtnMr_Init(void)
 void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr )
 {
 	
-	static uint32_t up_scroll_speed = 1;
-	static uint32_t down_scroll_speed = 1;
-	
 	ButtonProcess(&port1, Port1ReadBits());
 	switch((ButtonCurrent(&port1, ALL_BUTTONS)))
 	{
@@ -91,11 +88,10 @@ void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr )
 			
 				if(*EditFlag_ptr)
 				{
-					if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN - up_scroll_speed) ) == 0)
+					if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN) ) == 0)
 					{
 						if(counter_ptr != NULL )
 						{
-							up_scroll_speed = up_scroll_speed + 2;
 							(*counter_ptr)++;
 						}
 					}
@@ -109,11 +105,10 @@ void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr )
 			
 				if(*EditFlag_ptr)
 				{
-					if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN - down_scroll_speed)) == 0)
+					if((ui32TickCounter % (APP_BUTTON_POLL_DIVIDER_UP_DOWN)) == 0)
 					{
 						if(counter_ptr != NULL )
 						{
-							down_scroll_speed = down_scroll_speed + 2;
 							(*counter_ptr)--;
 						}
 					}
@@ -137,36 +132,5 @@ void BtnMr( cursor_t * cursor_ptr, int * counter_ptr, bool * EditFlag_ptr )
 			break;
 		}
 	}
-
-	
-	// if buttons up or down are released reset the scroll speed multiplier
-	if(ButtonReleased(&port1, UP_BUTTON) == UP_BUTTON)
-	{
-		up_scroll_speed = 1;
-	}
-	
-	// if buttons up or down are released reset the scroll speed multiplier
-	if(ButtonReleased(&port1, DOWN_BUTTON) == DOWN_BUTTON)
-	{
-		down_scroll_speed = 1;
-	}
-	
 				
 }		
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -102,7 +102,7 @@ static void ButtonsPoll_Task(void *pvparameters)
 		// 3: For debounce routine to run properly there has to be atleast a 1ms delay between each call
 		//    for the the function
 		//
-		vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS( 5 ) );
+		vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS( 20 ) );
 		
 		
 	}
