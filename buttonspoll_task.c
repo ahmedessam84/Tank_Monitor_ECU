@@ -138,6 +138,14 @@ uint32_t ButtonsPoll_Task_Init( void )
 static void RollOverAdjust( SetupScreen_t * setup )
 {
 	
+	// under test implementation to subsitute the code below	
+		setup->calendar.tm_min %= 60;
+		setup->calendar.tm_hour %= 24;
+		setup->calendar.tm_mday %= 32;
+		setup->calendar.tm_mon %= 12;
+		setup->cursor = (cursor_t)((setup->cursor % 7) + 1);
+	
+  	/*
 		// adjust calendar rollover upper boundry
 		if( setup->calendar.tm_min > 59)
 		{
@@ -185,5 +193,6 @@ static void RollOverAdjust( SetupScreen_t * setup )
 		{
 			setup->cursor = LENGTH;
 		}
+		*/
 		
 }

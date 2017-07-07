@@ -1,6 +1,7 @@
 //*****************************************************************************
 //
-// freertos_demo.c - Simple FreeRTOS example.
+// Tank_Monitor_ECU.c - Tank Monitoring Software on TM4C123.
+// Author: Ahmed E. Sobhy
 //
 // Copyright (c) 2012-2016 Texas Instruments Incorporated.  All rights reserved.
 // Software License Agreement
@@ -206,7 +207,7 @@ main(void)
 		g_pRTCSemaphore = xSemaphoreCreateMutex();
 
 		//
-		// Create Rx_Task
+		// Create Rx_Task ----> depends on Tx_Task, repeats every 2 seconds if successfully received if not then every 4 seconds
 		//
 		if(Rx_Task_Init() != TRUE )
 		{
@@ -217,7 +218,7 @@ main(void)
 		}
 
 		//
-		// Create Tx_Task
+		// Create Tx_Task ----> repeats every 2 seconds
 		//
 		if(Tx_Task_Init() != TRUE )
 		{
@@ -228,7 +229,7 @@ main(void)
 		}
 
 		//
-		// Create ButtonsPoll_Task
+		// Create ButtonsPoll_Task ----> repeats every 20 milliseconds
 		//
 		if(ButtonsPoll_Task_Init() != TRUE)
 		{
@@ -239,7 +240,7 @@ main(void)
 		}
 		
 		//
-		// Create Display_Task
+		// Create Display_Task ----> repeats every 100 milliseconds
 		//
 		if(Display_Task_Init() != TRUE)
 		{
